@@ -1,0 +1,75 @@
+============================================================
+  Recitation Report  —  mock
+============================================================
+Surah : 1   Ayah : 1
+Mode  : FULL
+ASR WER : 1.7500
+
+============================================================
+  Reference Text
+============================================================
+بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+
+============================================================
+  Hypothesis Text
+============================================================
+الَّذِينَ يُؤْمِنُونَ بِمَا هُوَ مَا هُوَ يُؤْمِنُونَ
+
+============================================================
+  Summary
+============================================================
+  Total errors  : 7
+  By type:
+    INSERTION                 3
+    SUBSTITUTION              1
+    TAJWEED_MEDD              3
+  By severity:
+    CONFIRMED                 7
+
+============================================================
+  Errors  (7 shown)
+============================================================
+  [CONFIRMED] INSERTION  @ 1:1:INS0
+    Reference  : 
+    Hypothesis : الَّذِينَ
+    Notes      : Insertion error detected.
+
+  [CONFIRMED] INSERTION  @ 1:1:INS1
+    Reference  : 
+    Hypothesis : يُؤْمِنُونَ
+    Notes      : Insertion error detected.
+
+  [CONFIRMED] INSERTION  @ 1:1:INS2
+    Reference  : 
+    Hypothesis : بِمَا
+    Notes      : Insertion error detected.
+
+  [CONFIRMED] SUBSTITUTION  @ 1:1:0
+    Reference  : بِسْمِ
+    Hypothesis : هُوَ
+    Time       : 0.00s – 0.62s
+    GOP        : 0.5000
+    Notes      : Substitution error detected.
+
+  [CONFIRMED] TAJWEED_MEDD  @ 1:1:1
+    Reference  : اللَّهِ
+    Hypothesis : مَا
+    Time       : 0.62s – 1.25s
+    GOP        : 0.5000
+    Notes      : Tajweed rule violation: TAJWEED_MEDD
+
+  [CONFIRMED] TAJWEED_MEDD  @ 1:1:2
+    Reference  : الرَّحْمَٰنِ
+    Hypothesis : هُوَ
+    Time       : 1.25s – 1.88s
+    GOP        : 0.5000
+    Notes      : Tajweed rule violation: TAJWEED_MEDD
+
+  [CONFIRMED] TAJWEED_MEDD  @ 1:1:3
+    Reference  : الرَّحِيمِ
+    Hypothesis : يُؤْمِنُونَ
+    Time       : 1.88s – 2.50s
+    GOP        : 0.5000
+    Notes      : Tajweed rule violation: TAJWEED_MEDD
+
+============================================================

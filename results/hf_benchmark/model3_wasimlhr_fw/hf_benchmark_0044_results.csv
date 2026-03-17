@@ -1,0 +1,4 @@
+parquet_index,surah_id,ayah_id,surah_name_en,reciter_id,reciter_name,wer,cer,insertions,deletions,substitutions,reference_text,hypothesis_text,processing_time_sec,success,error_message
+0044,37,78,Those drawn up in Ranks,alafasy,Alafasy_64kbps,2.0,1.5454545454545454,4,0,4,وَتَرَكْنَا عَلَيْهِ فِي الْآخِرِينَ,And We left for him in the Hereafter.,15.566845178604126,True,
+0044,37,79,Those drawn up in Ranks,alafasy,Alafasy_64kbps,1.4,1.2083333333333333,2,0,5,سَلَامٌ عَلَىٰ نُوحٍ فِي الْعَالَمِينَ,Peace be upon Noah in the worlds.,13.992513179779053,True,
+0044,37,80,Those drawn up in Ranks,alafasy,Alafasy_64kbps,2.25,1.8636363636363635,5,0,4,إِنَّا كَذَٰلِكَ نَجْزِي الْمُحْسِنِينَ,"Indeed, thus do We reward the doers of good.",19.482530117034912,True,

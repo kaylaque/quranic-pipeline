@@ -1,0 +1,72 @@
+{
+  "audio_id": "mock_audio",
+  "surah": 1,
+  "ayah": 1,
+  "reference_text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+  "hypothesis_text": "بسم خطأ الرحمن الرحيم",
+  "errors": [
+    {
+      "position": "1:1:0",
+      "reference_token": "بِسْمِ",
+      "hypothesis_token": "بسم",
+      "error_type": "LOW_CONFIDENCE",
+      "severity": "POSSIBLE",
+      "confidence_score": 0.15000000000000002,
+      "gop_score": 0.85,
+      "alignment_confidence": "FALLBACK",
+      "start_sec": 0.0,
+      "end_sec": 0.625,
+      "notes": "Underlying error: HARAKAT_ERROR. Alignment used fallback; low confidence."
+    },
+    {
+      "position": "1:1:1",
+      "reference_token": "اللَّهِ",
+      "hypothesis_token": "خطأ",
+      "error_type": "LOW_CONFIDENCE",
+      "severity": "POSSIBLE",
+      "confidence_score": 0.15000000000000002,
+      "gop_score": 0.85,
+      "alignment_confidence": "FALLBACK",
+      "start_sec": 0.625,
+      "end_sec": 1.25,
+      "notes": "Underlying error: SUBSTITUTION. Alignment used fallback; low confidence."
+    },
+    {
+      "position": "1:1:2",
+      "reference_token": "الرَّحْمَٰنِ",
+      "hypothesis_token": "الرحمن",
+      "error_type": "LOW_CONFIDENCE",
+      "severity": "POSSIBLE",
+      "confidence_score": 0.15000000000000002,
+      "gop_score": 0.85,
+      "alignment_confidence": "FALLBACK",
+      "start_sec": 1.25,
+      "end_sec": 1.875,
+      "notes": "Underlying error: HARAKAT_ERROR. Alignment used fallback; low confidence."
+    },
+    {
+      "position": "1:1:3",
+      "reference_token": "الرَّحِيمِ",
+      "hypothesis_token": "الرحيم",
+      "error_type": "LOW_CONFIDENCE",
+      "severity": "POSSIBLE",
+      "confidence_score": 0.15000000000000002,
+      "gop_score": 0.85,
+      "alignment_confidence": "FALLBACK",
+      "start_sec": 1.875,
+      "end_sec": 2.5,
+      "notes": "Underlying error: HARAKAT_ERROR. Alignment used fallback; low confidence."
+    }
+  ],
+  "summary": {
+    "total_errors": 4,
+    "by_type": {
+      "LOW_CONFIDENCE": 4
+    },
+    "by_severity": {
+      "POSSIBLE": 4
+    }
+  },
+  "asr_wer": 0.25,
+  "pipeline_mode": "MOCK"
+}

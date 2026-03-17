@@ -1,0 +1,11 @@
+parquet_index,surah_id,ayah_id,surah_name_en,reciter_id,reciter_name,wer,cer,insertions,deletions,substitutions,reference_text,hypothesis_text,processing_time_sec,success,error_message
+0044,37,78,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.0,0.0,0,0,0,وَتَرَكْنَا عَلَيْهِ فِي الْآخِرِينَ,وَتَرَكْنَا عَلَيْهِ فِي الْآخِرِينَ,31.363065004348755,True,
+0044,37,79,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.0,0.0,0,0,0,سَلَامٌ عَلَىٰ نُوحٍ فِي الْعَالَمِينَ,سَلَامٌ عَلَىٰ نُوحٍ فِي الْعَالَمِينَ,16.485435962677002,True,
+0044,37,80,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.0,0.0,0,0,0,إِنَّا كَذَٰلِكَ نَجْزِي الْمُحْسِنِينَ,إِنَّا كَذَٰلِكَ نَجْزِي الْمُحْسِنِينَ,16.823856830596924,True,
+0044,37,81,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.0,0.0,0,0,0,إِنَّهُ مِنْ عِبَادِنَا الْمُؤْمِنِينَ,إِنَّهُ مِنْ عِبَادِنَا الْمُؤْمِنِينَ,15.066099882125854,True,
+0044,37,82,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.0,0.0,0,0,0,ثُمَّ أَغْرَقْنَا الْآخَرِينَ,ثُمَّ أَغْرَقْنَا الْآخَرِينَ,13.770517110824585,True,
+0044,37,83,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.0,0.0,0,0,0,۞ وَإِنَّ مِن شِيعَتِهِ لَإِبْرَاهِيمَ,وَإِنَّ مِن شِيعَتِهِ لَإِبْرَاهِيمُ,16.177549123764038,True,
+0044,37,84,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.0,0.0,0,0,0,إِذْ جَاءَ رَبَّهُ بِقَلْبٍ سَلِيمٍ,إِذْ جَاءَ رَبَّهُ بِقَلْبٍ سَلِيمٍ,17.21400499343872,True,
+0044,37,85,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.0,0.0,0,0,0,إِذْ قَالَ لِأَبِيهِ وَقَوْمِهِ مَاذَا تَعْبُدُونَ,إِذْ قَالَ لِأَبِيهِ وَقَوْمِهِ مَاذَا تَعْبُدُونَ,20.620959997177124,True,
+0044,37,86,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.2,0.038461538461538464,0,0,1,أَئِفْكًا آلِهَةً دُونَ اللَّهِ تُرِيدُونَ,أَإِفْكًا آلِهَةً دُونَ اللَّهِ تُرِيدُونَ,20.811718940734863,True,
+0044,37,87,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.0,0.0,0,0,0,فَمَا ظَنُّكُم بِرَبِّ الْعَالَمِينَ,فَمَا ظَنُّكُم بِرَبِّ الْعَالَمِينَ,17.194875955581665,True,

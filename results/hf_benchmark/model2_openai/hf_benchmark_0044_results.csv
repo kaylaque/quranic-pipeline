@@ -1,0 +1,11 @@
+parquet_index,surah_id,ayah_id,surah_name_en,reciter_id,reciter_name,wer,cer,insertions,deletions,substitutions,reference_text,hypothesis_text,processing_time_sec,success,error_message
+0044,37,78,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.25,0.045454545454545456,0,0,1,وَتَرَكْنَا عَلَيْهِ فِي الْآخِرِينَ,وتردكنا عليه في الآخرين,1.8521947860717773,True,
+0044,37,79,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.2,0.041666666666666664,0,0,1,سَلَامٌ عَلَىٰ نُوحٍ فِي الْعَالَمِينَ,سلام على نوحن في العالمين,1.5705149173736572,True,
+0044,37,80,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.75,0.13636363636363635,0,0,3,إِنَّا كَذَٰلِكَ نَجْزِي الْمُحْسِنِينَ,إنك ذلك نجز المحسنين,1.9922339916229248,True,
+0044,37,81,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.25,0.09090909090909091,0,0,1,إِنَّهُ مِنْ عِبَادِنَا الْمُؤْمِنِينَ,إنه من عباد المؤمنين,1.0759310722351074,True,
+0044,37,82,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.3333333333333333,0.058823529411764705,0,0,1,ثُمَّ أَغْرَقْنَا الْآخَرِينَ,ثم أرقنا الآخرين,1.0382509231567383,True,
+0044,37,83,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.25,0.09523809523809523,0,0,1,۞ وَإِنَّ مِن شِيعَتِهِ لَإِبْرَاهِيمَ,وإن من شيعته لأبراهين,1.2713720798492432,True,
+0044,37,84,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.0,0.0,0,0,0,إِذْ جَاءَ رَبَّهُ بِقَلْبٍ سَلِيمٍ,إذ جاء ربه بقلب سليم,1.0133183002471924,True,
+0044,37,85,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.3333333333333333,0.06666666666666667,0,1,1,إِذْ قَالَ لِأَبِيهِ وَقَوْمِهِ مَاذَا تَعْبُدُونَ,إيقال لأبيه وقومه ماذا تعبدون,1.2149930000305176,True,
+0044,37,86,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.6,0.23076923076923078,0,0,3,أَئِفْكًا آلِهَةً دُونَ اللَّهِ تُرِيدُونَ,أفكا أليها تندون الله تريدون,4.2708868980407715,True,
+0044,37,87,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.0,0.0,0,0,0,فَمَا ظَنُّكُم بِرَبِّ الْعَالَمِينَ,فما ظنكم برب العالمين,2.39936900138855,True,

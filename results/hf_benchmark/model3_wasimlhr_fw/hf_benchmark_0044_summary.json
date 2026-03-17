@@ -1,0 +1,20 @@
+{
+  "parquet": "0044.parquet",
+  "total_rows": 3,
+  "successful": 3,
+  "failed": 0,
+  "overall": {
+    "mean_wer": 1.8833333333333335,
+    "mean_cer": 1.5391414141414141,
+    "min_wer": 1.4,
+    "max_wer": 2.25
+  },
+  "per_reciter": {
+    "alafasy": {
+      "name": "Alafasy_64kbps",
+      "samples": 3,
+      "mean_wer": 1.8833333333333335,
+      "mean_cer": 1.5391414141414141
+    }
+  }
+}

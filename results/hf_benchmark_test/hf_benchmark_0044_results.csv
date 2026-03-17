@@ -1,0 +1,4 @@
+parquet_index,surah_id,ayah_id,surah_name_en,reciter_id,reciter_name,wer,cer,insertions,deletions,substitutions,reference_text,hypothesis_text,processing_time_sec,success,error_message
+0044,37,78,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.0,0.0,0,0,0,وَتَرَكْنَا عَلَيْهِ فِي الْآخِرِينَ,وَتَرَكْنَا عَلَيْهِ فِي الْآخِرِينَ,3.369020938873291,True,
+0044,37,79,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.0,0.0,0,0,0,سَلَامٌ عَلَىٰ نُوحٍ فِي الْعَالَمِينَ,سَلَامٌ عَلَى نُوحٍ فِي الْعَالَمِينَ,2.144360065460205,True,
+0044,37,80,Those drawn up in Ranks,alafasy,Alafasy_64kbps,0.0,0.0,0,0,0,إِنَّا كَذَٰلِكَ نَجْزِي الْمُحْسِنِينَ,إِنَّا كَذَلِكَ نَجْزِي الْمُحْسِنِينَ,3.1667208671569824,True,

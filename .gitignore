@@ -3,7 +3,7 @@ __pycache__/
 .env
 data/samples/
 data/benchmark_hf/
-results/
+*.pdf
 *.pt
 *.bin
 *.parquet
