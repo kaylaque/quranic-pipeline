@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.env
+data/samples/
+data/benchmark_hf/
+results/
+*.pt
+*.bin
+*.parquet
+venv/
+.venv/
+.DS_Store
+.claude
+.pytest_cache
+models
+models/

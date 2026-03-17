@@ -1,0 +1,33 @@
+# Python runtime artifacts
+venv/
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Development outputs — mounted as volumes at runtime
+results/
+data/
+
+# Large model not baked into image — mount as volume if needed
+models/whisper-quran-v1-ct2/
+
+# HuggingFace local cache — use named Docker volume instead
+.cache/
+
+# Git
+.git/
+.gitignore
+
+# Docs and reports (not needed at runtime)
+docs/
+*.md
+!requirements.txt
+
+# Tests (included only in the tests service via volume mount)
+tests/
+
+# macOS artifacts
+.DS_Store

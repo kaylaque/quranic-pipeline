@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+
+  # ── Single-verse pipeline ────────────────────────────────────────────────
+  # docker compose run pipeline --surah 1 --ayah 1 --audio data/samples/mock.wav
+  pipeline:
+    build: .
+    image: quranic-pipeline:latest
+    volumes:
+      - ./data:/app/data        # audio files, reference CSVs
+      - ./results:/app/results  # pipeline JSON/text reports
+      - hf_cache:/app/.cache/huggingface  # HuggingFace model cache (persists across runs)
+    environment:
+      - PYTORCH_ENABLE_MPS_FALLBACK=1
+    entrypoint: ["python", "scripts/run_pipeline.py"]
+
+  # ── WAV-folder batch benchmark ───────────────────────────────────────────
+  # docker compose run benchmark --audio_dir data/samples/ --output_dir results/benchmark/
+  benchmark:
+    build: .
+    image: quranic-pipeline:latest
+    volumes:
+      - ./data:/app/data
+      - ./results:/app/results
+      - hf_cache:/app/.cache/huggingface
+    environment:
+      - PYTORCH_ENABLE_MPS_FALLBACK=1
+    entrypoint: ["python", "scripts/run_benchmark.py"]
+
+  # ── HuggingFace parquet benchmark ───────────────────────────────────────
+  # docker compose run hf-benchmark --parquet data/benchmark_hf/0044.parquet
+  hf-benchmark:
+    build: .
+    image: quranic-pipeline:latest
+    volumes:
+      - ./data:/app/data
+      - ./results:/app/results
+      - hf_cache:/app/.cache/huggingface
+    environment:
+      - PYTORCH_ENABLE_MPS_FALLBACK=1
+    entrypoint: ["python", "scripts/run_hf_benchmark.py"]
+
+  # ── Test suite ──────────────────────────────────────────────────────────
+  # docker compose run tests
+  tests:
+    build: .
+    image: quranic-pipeline:latest
+    volumes:
+      - ./tests:/app/tests
+      - ./data:/app/data
+    environment:
+      - PYTORCH_ENABLE_MPS_FALLBACK=1
+    entrypoint: ["pytest", "tests/", "-v"]
+
+volumes:
+  hf_cache:  # Named volume — persists downloaded HuggingFace models between runs

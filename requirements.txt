@@ -1,0 +1,24 @@
+# --- ASR backends ---
+# faster-whisper: CTranslate2-based, ~4x faster CPU inference, no MPS needed.
+# Recommended for M1 and production CPU deployments.
+faster-whisper>=1.1.0
+
+# HuggingFace backend (required for alignment + GOP scoring stages).
+# Also used as fallback ASR backend via --backend huggingface.
+transformers>=4.40.0
+torch>=2.0.0
+
+# --- Audio processing ---
+soundfile          # Primary audio loading (WAV/FLAC/OGG/AIFF, no ffmpeg)
+librosa            # Resampling fallback
+miniaudio>=1.61    # MP3 decoding (for HuggingFace dataset benchmarking)
+pyarrow>=14.0.0    # Parquet file reading (for HuggingFace dataset benchmarking)
+
+# --- Metrics & data ---
+jiwer              # WER / CER computation
+numpy<2.0          # Pin for PyTorch 2.1.x compatibility (numpy 2.x breaks torch C extensions)
+pandas
+pydantic>=2.0
+
+# --- Testing ---
+pytest
