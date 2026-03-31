@@ -324,7 +324,7 @@ def compute_gop_score(
             sampling_rate=sr,
             return_tensors="pt",
         )
-        input_features = inputs.input_features.to(device)
+        input_features = inputs.input_features.to(device=device, dtype=model.dtype)
 
         with torch.no_grad():
             # Obtain encoder outputs / logits
@@ -335,7 +335,8 @@ def compute_gop_score(
                 else:
                     hidden = outputs.last_hidden_state  # (batch, seq, hidden)
                     logits = hidden.mean(dim=1)         # (batch, hidden)
-            except Exception:
+            except Exception as model_exc:
+                logger.debug("model(input_features) failed (%s), retrying with generate()", model_exc)
                 out = model.generate(
                     input_features,
                     output_scores=True,
@@ -445,6 +446,59 @@ def check_medd_duration(
 
 
 # ---------------------------------------------------------------------------
+# faster-whisper timestamp → AlignedWord conversion
+# ---------------------------------------------------------------------------
+
+def create_aligned_from_fw_timestamps(
+    word_timestamps: list,
+    reference_text: str,
+    surah: int = 0,
+    ayah: int = 0,
+) -> List[AlignedWord]:
+    """
+    Convert faster-whisper word timestamps to a list of :class:`AlignedWord`.
+
+    Maps reference words to ASR timestamps by position index (same strategy
+    as :func:`_align_with_whisper_word_timestamps`).  Remaining reference
+    words beyond the timestamp list are distributed over the leftover audio
+    span.
+
+    This avoids a second HuggingFace model inference pass when the pipeline
+    already has word-level timestamps from the faster-whisper ASR step.
+    """
+    words = reference_text.split()
+    if not words or not word_timestamps:
+        return []
+
+    audio_end = float(word_timestamps[-1].get("end", 0.0)) if word_timestamps else 0.0
+    aligned: List[AlignedWord] = []
+
+    for idx, word in enumerate(words):
+        if idx < len(word_timestamps):
+            ts = word_timestamps[idx]
+            start = float(ts.get("start", 0.0))
+            end = float(ts.get("end", start + 0.3))
+        else:
+            prev_end = aligned[-1].end_sec if aligned else 0.0
+            remaining = len(words) - idx
+            dur = max(0.05, (audio_end - prev_end) / remaining)
+            start = prev_end
+            end = min(start + dur, audio_end)
+
+        aligned.append(AlignedWord(
+            word_position=f"{surah}:{ayah}:{idx}",
+            text=word,
+            start_sec=round(start, 4),
+            end_sec=round(end, 4),
+            duration_sec=round(end - start, 4),
+            gop_score=None,
+            alignment_confidence="HIGH",
+        ))
+
+    return aligned
+
+
+# ---------------------------------------------------------------------------
 # Mock / fallback alignment
 # ---------------------------------------------------------------------------
 
@@ -459,6 +513,11 @@ def create_mock_alignment(
 
     Each word gets an equal share of *audio_duration*.
     gop_score is set to 0.85 and alignment_confidence to "FALLBACK".
+
+    Note: the pre-filled gop_score=0.85 is never used by the classifier for
+    FALLBACK-aligned words — :func:`classify_error` detects ``alignment_confidence
+    == "FALLBACK"`` and returns LOW_CONFIDENCE before consulting the GOP score.
+    The value is present only so the field is non-None if accessed directly.
     """
     words = reference_text.split()
     if not words:

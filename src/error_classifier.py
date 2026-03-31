@@ -49,8 +49,8 @@ class ErrorRecord(BaseModel):
     hypothesis_token: str
     error_type: ErrorType
     severity: Severity
-    confidence_score: float
-    gop_score: Optional[float] = None
+    confidence_score: float  # always clamped to [0.0, 1.0]
+    gop_score: Optional[float] = None  # clamped to [0.0, 1.0] when set
     alignment_confidence: str = "HIGH"
     start_sec: Optional[float] = None
     end_sec: Optional[float] = None
@@ -103,9 +103,6 @@ def classify_error(
     confidence_score = 1.0 - gop_score if gop available, else 0.6
     (represents confidence that the flagged item IS an error; high GOP → low confidence in error)
     """
-    # Backwards-compatibility aliases so callers using old keyword names still work
-    gop_threshold_confirmed = gop_min_for_possible
-    gop_threshold_possible = gop_min_for_suppressed
     # Extract basic fields from diff
     error_type_str: str = diff.error_type  # string from DiffResult
     position: str = diff.position
@@ -124,7 +121,7 @@ def classify_error(
         start_sec = aligned_word.start_sec
         end_sec = aligned_word.end_sec
 
-    confidence_score = (1.0 - gop) if gop is not None else 0.6
+    confidence_score = max(0.0, min(1.0, 1.0 - gop)) if gop is not None else 0.6
 
     notes = ""
 
@@ -163,10 +160,10 @@ def classify_error(
 
     # ---- 3. HARAKAT_ERROR ----
     if error_type_str == "HARAKAT_ERROR":
-        if gop is not None and gop > gop_threshold_possible:
+        if gop is not None and gop > gop_min_for_suppressed:
             severity = Severity.SUPPRESSED
             notes = "GOP score high; harakat error likely normalisation mismatch."
-        elif gop is not None and gop > gop_threshold_confirmed:
+        elif gop is not None and gop > gop_min_for_possible:
             severity = Severity.POSSIBLE
             notes = "Harakat mismatch with moderate GOP; possible error."
         else:
@@ -189,18 +186,27 @@ def classify_error(
     # ---- 4. TAJWEED errors from phone_diff ----
     if phone_diff is not None and phone_diff.diff_type.startswith("TAJWEED_"):
         mapped = _TAJWEED_MAP.get(phone_diff.diff_type, ErrorType.TAJWEED_MEDD)
+        if gop is not None and gop > gop_min_for_suppressed:
+            taj_severity = Severity.SUPPRESSED
+            taj_notes = f"Tajweed rule {phone_diff.diff_type} fired but GOP high; likely correct."
+        elif gop is not None and gop > gop_min_for_possible:
+            taj_severity = Severity.POSSIBLE
+            taj_notes = f"Tajweed rule violation: {phone_diff.diff_type} (moderate GOP)."
+        else:
+            taj_severity = Severity.CONFIRMED
+            taj_notes = f"Tajweed rule violation: {phone_diff.diff_type}"
         return ErrorRecord(
             position=position,
             reference_token=ref_token,
             hypothesis_token=hyp_token,
             error_type=mapped,
-            severity=Severity.CONFIRMED,
+            severity=taj_severity,
             confidence_score=confidence_score,
             gop_score=gop,
             alignment_confidence=align_conf,
             start_sec=start_sec,
             end_sec=end_sec,
-            notes=f"Tajweed rule violation: {phone_diff.diff_type}",
+            notes=taj_notes,
         )
 
     # ---- 5. SUBSTITUTION / DELETION / INSERTION ----
@@ -211,11 +217,13 @@ def classify_error(
     }
     mapped_type = error_type_map.get(error_type_str, ErrorType.SUBSTITUTION)
 
-    # ---- 6. Suppression: high GOP on minor error ----
+    # ---- 6. Suppression: high GOP on word-level error ----
+    # Applies to SUBSTITUTION, DELETION, and INSERTION — high GOP suggests
+    # the reciter pronounced something acceptable and the error is an ASR artefact.
     if (
-        error_type_str == "SUBSTITUTION"
+        error_type_str in ("SUBSTITUTION", "DELETION", "INSERTION")
         and gop is not None
-        and gop > gop_threshold_possible
+        and gop > gop_min_for_suppressed
     ):
         severity = Severity.SUPPRESSED
         notes = "High GOP score suggests ASR artefact; error suppressed."

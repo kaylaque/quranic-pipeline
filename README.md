@@ -8,7 +8,7 @@ Automated detection of Quranic recitation errors using Whisper ASR, Tajweed-awar
 
 ```bash
 # 1. Clone and setup
-git clone <repo-url>
+git clone https://github.com/kaylaque/quranic-pipeline.git
 cd quranic-pipeline
 python -m venv venv
 source venv/bin/activate

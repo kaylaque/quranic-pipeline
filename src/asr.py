@@ -116,10 +116,11 @@ def load_audio(audio_path: str, target_sr: int = 16000) -> tuple[np.ndarray, int
     import soundfile as sf
 
     path = str(audio_path)
-    suffix = path.rsplit(".", 1)[-1].lower()
-    if suffix and f".{suffix}" not in SUPPORTED_FORMATS:
+    from pathlib import Path as _Path
+    suffix = _Path(path).suffix.lower()  # "" for extensionless files
+    if suffix and suffix not in SUPPORTED_FORMATS:
         raise ValueError(
-            f"Unsupported audio format '.{suffix}'. "
+            f"Unsupported audio format '{suffix}'. "
             f"Supported formats: {', '.join(sorted(SUPPORTED_FORMATS))}"
         )
 
@@ -135,10 +136,11 @@ def load_audio(audio_path: str, target_sr: int = 16000) -> tuple[np.ndarray, int
             import librosa
             audio, sr = librosa.load(path, sr=None, mono=True)
             audio = audio.astype(np.float32)
-        except Exception:
+        except Exception as librosa_exc:
             raise RuntimeError(
-                f"Could not load audio '{path}' with soundfile or librosa: {sf_exc}"
-            )
+                f"Could not load audio '{path}' with soundfile ({sf_exc}) "
+                f"or librosa ({librosa_exc})"
+            ) from sf_exc
 
     # Resample if needed
     if sr != target_sr:
@@ -297,7 +299,7 @@ def transcribe_whisper(
         sampling_rate=sr,
         return_tensors="pt",
     )
-    input_features = inputs.input_features.to(device)
+    input_features = inputs.input_features.to(device=device, dtype=model.dtype)
 
     # Build attention mask: use processor-provided mask if available, else all-ones.
     # Whisper pads input_features to 30 s so an all-ones mask is always valid.

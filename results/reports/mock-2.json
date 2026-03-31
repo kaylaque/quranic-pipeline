@@ -1,0 +1,33 @@
+{
+  "audio_id": "mock-2",
+  "surah": 0,
+  "ayah": 0,
+  "reference_text": "وَالْمُؤْمِنِينَ",
+  "hypothesis_text": "وَالْمُؤْمِنِينَ",
+  "errors": [
+    {
+      "position": "0:0:0",
+      "reference_token": "وَالْمُؤْمِنِينَ",
+      "hypothesis_token": "وَالْمُؤْمِنِينَ",
+      "error_type": "MATCH",
+      "severity": "CONFIRMED",
+      "confidence_score": 0.0,
+      "gop_score": null,
+      "alignment_confidence": "HIGH",
+      "start_sec": null,
+      "end_sec": null,
+      "notes": "No error detected."
+    }
+  ],
+  "summary": {
+    "total_errors": 0,
+    "by_type": {
+      "MATCH": 1
+    },
+    "by_severity": {
+      "CONFIRMED": 1
+    }
+  },
+  "asr_wer": null,
+  "pipeline_mode": "TEXT_ONLY_CLEAN"
+}

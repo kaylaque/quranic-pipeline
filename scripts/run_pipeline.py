@@ -47,14 +47,28 @@ logger = logging.getLogger(__name__)
 # Default reference texts for well-known ayahs (used when --reference omitted)
 # ---------------------------------------------------------------------------
 _DEFAULT_REFERENCES: dict[tuple[int, int], str] = {
-    (1, 1): "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
-    (1, 2): "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
-    (1, 3): "الرَّحْمَٰنِ الرَّحِيمِ",
-    (1, 4): "مَالِكِ يَوْمِ الدِّينِ",
+    # Surah Al-Fatiha (Uthmani script with full tashkeel)
+    (1, 1): "بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ",
+    (1, 2): "ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَـٰلَمِينَ",
+    (1, 3): "ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ",
+    (1, 4): "مَـٰلِكِ يَوْمِ ٱلدِّينِ",
     (1, 5): "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ",
-    (1, 6): "اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ",
-    (1, 7): "صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
-    (2, 255): "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ",
+    (1, 6): "ٱهْدِنَا ٱلصِّرَٰطَ ٱلْمُسْتَقِيمَ",
+    (1, 7): "صِرَٰطَ ٱلَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ ٱلْمَغْضُوبِ عَلَيْهِمْ وَلَا ٱلضَّآلِّينَ",
+    # Surah Al-Baqarah
+    (2, 4): "وَٱلَّذِينَ يُؤْمِنُونَ بِمَآ أُنزِلَ إِلَيْكَ وَمَآ أُنزِلَ مِن قَبْلِكَ وَبِٱلْـَٔاخِرَةِ هُمْ يُوقِنُونَ",
+    # Ayat al-Kursi (complete, Uthmani script)
+    (2, 255): (
+        "ٱللَّهُ لَآ إِلَـٰهَ إِلَّا هُوَ ٱلْحَىُّ ٱلْقَيُّومُ"
+        " لَا تَأْخُذُهُۥ سِنَةٌ وَلَا نَوْمٌ"
+        " لَّهُۥ مَا فِى ٱلسَّمَـٰوَٰتِ وَمَا فِى ٱلْأَرْضِ"
+        " مَن ذَا ٱلَّذِى يَشْفَعُ عِندَهُۥٓ إِلَّا بِإِذْنِهِۦ"
+        " يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ"
+        " وَلَا يُحِيطُونَ بِشَىْءٍ مِّنْ عِلْمِهِۦٓ إِلَّا بِمَا شَآءَ"
+        " وَسِعَ كُرْسِيُّهُ ٱلسَّمَـٰوَٰتِ وَٱلْأَرْضَ"
+        " وَلَا يَـُٔودُهُۥ حِفْظُهُمَا"
+        " وَهُوَ ٱلْعَلِىُّ ٱلْعَظِيمُ"
+    ),
 }
 
 
@@ -293,9 +307,11 @@ def main() -> None:
     # When using faster-whisper backend these remain None until lazy-loaded.
     model = None
     processor = None
+    # resolved_device starts as "cpu" for the faster-whisper path; updated to
+    # the real device once the HuggingFace model loads (lazy load below).
     resolved_device = device_preference if device_preference != "auto" else "cpu"
-    # Word timestamps from faster-whisper (reused by alignment to avoid a
-    # second Whisper pass).
+    # Word timestamps from faster-whisper — reused by alignment to avoid a
+    # second HuggingFace Whisper inference pass.
     _fw_word_timestamps = None
 
     with _step(3, "ASR transcription", args.verbose):
@@ -353,6 +369,16 @@ def main() -> None:
             except Exception as exc:
                 logger.warning("ASR failed: %s  — using empty hypothesis.", exc)
                 hypothesis = ""
+
+    # -------------------------------------------------------------------------
+    # ASR failure guard — empty hypothesis in non-mock mode means the model
+    # produced no output.  Flag pipeline_mode so the report is not mistaken
+    # for a real recitation analysis with all words deleted.
+    # -------------------------------------------------------------------------
+    asr_failed = not args.mock and not hypothesis
+    if asr_failed:
+        logger.warning("ASR produced empty transcript — pipeline_mode will be ASR_FAILED.")
+        pipeline_mode = "ASR_FAILED"
 
     # -------------------------------------------------------------------------
     # Auto-detect surah/ayah from transcript when not provided
@@ -484,7 +510,10 @@ def main() -> None:
 
         # Forced alignment
         try:
-            from src.aligner import align_with_fallback, create_mock_alignment
+            from src.aligner import (
+                align_with_fallback, create_mock_alignment,
+                create_aligned_from_fw_timestamps,
+            )
             if args.mock:
                 # Mock mode uses silence WAV — skip CTC entirely, use equal-duration alignment
                 audio_duration = float(len(audio_array)) / max(sr, 1)
@@ -492,6 +521,16 @@ def main() -> None:
                     reference_text, audio_duration, surah=surah, ayah=ayah
                 )
                 logger.info("Mock alignment: %d words (equal-duration)", len(aligned_words))
+            elif _fw_word_timestamps:
+                # Reuse word timestamps already collected by faster-whisper ASR —
+                # avoids loading and running the HuggingFace model a second time.
+                aligned_words = create_aligned_from_fw_timestamps(
+                    _fw_word_timestamps, reference_text, surah=surah, ayah=ayah
+                )
+                logger.info(
+                    "Alignment from faster-whisper timestamps: %d words (HIGH confidence)",
+                    len(aligned_words),
+                )
             else:
                 aligned_words = align_with_fallback(
                     audio_array, sr, reference_text, hypothesis,
@@ -532,8 +571,8 @@ def main() -> None:
         else:
             logger.info("No aligned words — skipping GOP.")
 
-    # Determine pipeline_mode (don't overwrite ASR_ONLY)
-    if pipeline_mode != "ASR_ONLY":
+    # Determine pipeline_mode (don't overwrite ASR_ONLY or ASR_FAILED)
+    if pipeline_mode not in ("ASR_ONLY", "ASR_FAILED"):
         if args.mock:
             pipeline_mode = "MOCK"
         elif gop_available:
